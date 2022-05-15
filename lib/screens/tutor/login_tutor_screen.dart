@@ -1,4 +1,5 @@
 import 'package:etuturo_app/screens/tutor/tutor_dashboard_screen.dart';
+import 'package:etuturo_app/screens/tutor/tutor_profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -94,7 +95,7 @@ class _LoginTutorScreenState extends State<LoginTutorScreen> {
                   Navigator.pop(context);
                 },
               ),
-            )
+            ),
           ],
         ),
       ),
