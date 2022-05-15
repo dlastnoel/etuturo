@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "725961955651",
+    "project_id": "etuturo-b4d70",
+    "storage_bucket": "etuturo-b4d70.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725961955651:android:c7648ae1ff617c697777f6",
+        "android_client_info": {
+          "package_name": "com.cit.etuturo_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "725961955651-t89jc595uod1pt1gjki97olsr2trkgvh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu8sTpyeM984YTxS-be2QwH4nD1kSZ-XU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "725961955651-t89jc595uod1pt1gjki97olsr2trkgvh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
