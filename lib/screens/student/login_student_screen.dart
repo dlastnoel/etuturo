@@ -1,6 +1,7 @@
 import 'package:etuturo_app/models/database_model.dart';
-import 'package:etuturo_app/screens/student/student_dashboard_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginStudentScreen extends StatefulWidget {
   const LoginStudentScreen({Key? key}) : super(key: key);
@@ -13,6 +14,9 @@ class _LoginStudentScreenState extends State<LoginStudentScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   DatabaseModel databaseModel = DatabaseModel();
+
+  
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -46,6 +50,9 @@ class _LoginStudentScreenState extends State<LoginStudentScreen> {
                       const Image(
                         image: AssetImage('assets/images/pic2.png'),
                       ),
+                      const SizedBox(
+                        height: 30.0,
+                      ),
                       Container(
                         margin: const EdgeInsets.symmetric(
                             vertical: 0, horizontal: 20),
@@ -60,9 +67,11 @@ class _LoginStudentScreenState extends State<LoginStudentScreen> {
                         margin: const EdgeInsets.symmetric(
                             vertical: 0, horizontal: 20),
                         child: TextFormField(
+                          obscureText: true,
                           controller: passwordController,
                           cursorColor: Colors.black,
-                          decoration: const InputDecoration(labelText: "Email"),
+                          decoration:
+                              const InputDecoration(labelText: "Password"),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
@@ -81,11 +90,12 @@ class _LoginStudentScreenState extends State<LoginStudentScreen> {
                           fixedSize: const Size(150, 0),
                         ),
                         onPressed: () {
+                          databaseModel.signIn(
+                              emailController, passwordController, context);
                           // print(emailController.text);
                           // print(passwordController.text);
 
-                          databaseModel.signIn(
-                              emailController, passwordController, context);
+                          // databarroller, passwordController, context);
 
                           // Navigator.push(
                           //   context,

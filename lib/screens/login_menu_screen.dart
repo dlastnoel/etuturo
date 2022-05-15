@@ -74,8 +74,10 @@ class _LoginMenuScreenState extends State<LoginMenuScreen> {
                       fixedSize: const Size(150, 0),
                     ),
                     onPressed: () {
-                      databaseModel.signIn(
-                          emailController, passwordController, context);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const LoginStudentScreen()));
+                      // databaseModel.signIn(
+                      //     emailController, passwordController, context);
                     },
                   )
                 ],
