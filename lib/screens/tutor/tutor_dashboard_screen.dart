@@ -1,3 +1,4 @@
+import 'package:etuturo_app/screens/tutor/appointment_list.dart';
 import 'package:etuturo_app/screens/tutor/tutor_info_screen.dart';
 import 'package:etuturo_app/screens/tutor/tutor_profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -122,7 +123,15 @@ class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
                             onPrimary: Colors.black,
                             fixedSize: Size(
                                 MediaQuery.of(context).size.width - 50, 0)),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const AppointmentListScreen(),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
