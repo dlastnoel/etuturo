@@ -8,6 +8,18 @@ class StudentProfileScreen extends StatefulWidget {
 }
 
 class _StudentProfileScreenState extends State<StudentProfileScreen> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _addressController = TextEditingController();
+
+  @override
+  void initState() {
+    _nameController.text = 'Mark Dela Cruz';
+    _emailController.text = 'markdelacruz07@gmail.com';
+    _addressController.text = 'San Juan, La Union';
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +53,8 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: const TextField(
+                  child: TextField(
+                    controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
                       hintText: 'Name',
@@ -51,7 +64,8 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: const TextField(
+                  child: TextField(
+                    controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
                       hintText: 'Email',
@@ -61,7 +75,8 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: const TextField(
+                  child: TextField(
+                    controller: _addressController,
                     decoration: InputDecoration(
                       labelText: 'Address',
                       hintText: 'Address',

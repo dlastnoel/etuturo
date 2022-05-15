@@ -11,6 +11,9 @@ class LoginTutorScreen extends StatefulWidget {
 }
 
 class _LoginTutorScreenState extends State<LoginTutorScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -45,14 +48,19 @@ class _LoginTutorScreenState extends State<LoginTutorScreen> {
                   Container(
                     margin:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                    child: const TextField(
-                      decoration: InputDecoration(hintText: 'Username'),
+                    child: TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email Address',
+                        hintText: 'Email Address',
+                      ),
                     ),
                   ),
                   Container(
                     margin:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                    child: const TextField(
+                    child: TextField(
+                      controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(hintText: 'Password'),
                     ),
@@ -72,12 +80,23 @@ class _LoginTutorScreenState extends State<LoginTutorScreen> {
                       fixedSize: const Size(150, 0),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TutorDashboardScreen(),
-                        ),
-                      );
+                      if (_emailController.text == 'johndoe@gmail.com' &&
+                          _passwordController.text == 'vendetta0482') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TutorDashboardScreen(),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Email/Password is incorrect.',
+                            ),
+                          ),
+                        );
+                      }
                     },
                   ),
                 ],

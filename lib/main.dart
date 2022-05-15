@@ -1,3 +1,6 @@
+import 'package:etuturo_app/screens/student/student_dashboard_screen.dart';
+import 'package:etuturo_app/screens/student/tutor_screen.dart';
+import 'package:etuturo_app/screens/tutor/tutor_dashboard_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 

@@ -40,6 +40,16 @@ class _SignupTutorScreenState extends State<SignupTutorScreen> {
                     image: AssetImage('assets/images/user.png'),
                   ),
                   const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    'Tutor Sign Up',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
                     height: 15,
                   ),
                   Container(

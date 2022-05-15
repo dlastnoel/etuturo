@@ -8,6 +8,23 @@ class TutorProfileScreen extends StatefulWidget {
 }
 
 class _TutorProfileScreenState extends State<TutorProfileScreen> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _socialMediaUrlController = TextEditingController();
+  final _shortBioController = TextEditingController();
+
+  @override
+  void initState() {
+    _nameController.text = 'John Doe';
+    _emailController.text = 'johndoe@gmail.com';
+    _addressController.text = 'City of San Fernando, La Union';
+    _socialMediaUrlController.text = 'www.facebook.com';
+    _shortBioController.text = ' I teach English and Science';
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +58,8 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
                 Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: const TextField(
+                  child: TextField(
+                    controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
                       hintText: 'Name',
@@ -51,7 +69,8 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
                 Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: const TextField(
+                  child: TextField(
+                    controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
                       hintText: 'Email',
@@ -61,7 +80,8 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
                 Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: const TextField(
+                  child: TextField(
+                    controller: _addressController,
                     decoration: InputDecoration(
                       labelText: 'Address',
                       hintText: 'Address',
@@ -71,7 +91,19 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
                 Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: const TextField(
+                  child: TextField(
+                    controller: _socialMediaUrlController,
+                    decoration: InputDecoration(
+                      labelText: 'Social Media Url',
+                      hintText: 'Social Media Url',
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                  child: TextField(
+                    controller: _shortBioController,
                     decoration: InputDecoration(
                       labelText: 'Short Bio',
                       hintText: 'Short Bio',

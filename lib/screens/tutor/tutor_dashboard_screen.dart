@@ -40,6 +40,19 @@ class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
                 const Image(
                   image: AssetImage('assets/images/tutuser.png'),
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'John Doe',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 15),
                   padding: const EdgeInsets.all(20),

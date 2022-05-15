@@ -8,7 +8,14 @@ class TutorInfoScreen extends StatefulWidget {
 }
 
 class _TutorInfoScreenState extends State<TutorInfoScreen> {
-  bool _availability = false;
+  bool _availability = true;
+  final _ratePerHourController = TextEditingController();
+
+  @override
+  void initState() {
+    _ratePerHourController.text = '400';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,21 +63,12 @@ class _TutorInfoScreenState extends State<TutorInfoScreen> {
                 Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: const TextField(
+                  child: TextField(
+                    controller: _ratePerHourController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: 'Rate per hour',
                       hintText: 'Rate per hour',
-                    ),
-                  ),
-                ),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: const TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Facebook Profile Link',
-                      hintText: 'Facebook Profile Link',
                     ),
                   ),
                 ),

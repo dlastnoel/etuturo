@@ -1,5 +1,8 @@
+import 'package:etuturo_app/screens/login_screen.dart';
 import 'package:etuturo_app/screens/student/list_of_tutors.dart';
 import 'package:etuturo_app/screens/student/student_profile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class StudentDashboardScreen extends StatefulWidget {
@@ -39,6 +42,19 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 ),
                 const Image(
                   image: AssetImage('assets/images/tutuser.png'),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Mark Dela Cruz',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -97,6 +113,36 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                   const StudentProfileScreen(),
                             ),
                           );
+                        },
+                      ),
+                      ElevatedButton(
+                        child: const Text(
+                          'Logout',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            onPrimary: Colors.black,
+                            fixedSize: Size(
+                                MediaQuery.of(context).size.width - 50, 0)),
+                        onPressed: () {
+                          FirebaseAuth.instance.signOut();
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                              (route) => false);
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) =>
+                          //         const StudentProfileScreen(),
+                          //   ),
+                          // );
                         },
                       ),
                     ],

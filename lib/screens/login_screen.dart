@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 15,
                 ),
                 const Text(
-                  'Welcome to Etuturo',
+                  'Welcome to E-Tuturo',
                   style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
                 const Text(

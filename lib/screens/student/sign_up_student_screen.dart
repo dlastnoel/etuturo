@@ -41,6 +41,16 @@ class _SignupStudentScreenState extends State<SignupStudentScreen> {
                       image: AssetImage('assets/images/user.png'),
                     ),
                     const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
+                      'Student Sign Up',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
                       height: 15,
                     ),
                     Container(
@@ -96,8 +106,24 @@ class _SignupStudentScreenState extends State<SignupStudentScreen> {
                         controller: passwordController,
                         cursorColor: Colors.black,
                         textInputAction: TextInputAction.next,
-                        decoration:
-                            const InputDecoration(labelText: "Password"),
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                          hintText: 'Password',
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 20),
+                      child: TextField(
+                        // keyboardType: TextInputType.visiblePassword
+                        controller: passwordController,
+                        cursorColor: Colors.black,
+                        textInputAction: TextInputAction.next,
+                        decoration: const InputDecoration(
+                          labelText: 'Confirm Password',
+                          hintText: 'Confirm Password',
+                        ),
                       ),
                     ),
                     // Container(

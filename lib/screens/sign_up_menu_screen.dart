@@ -49,7 +49,7 @@ class _SignupMenuScreenState extends State<SignupMenuScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const LogInPage(),
+                          builder: (context) => const SignupTutorScreen(),
                         ),
                       );
                     },

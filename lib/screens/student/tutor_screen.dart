@@ -9,7 +9,8 @@ class TutorScreen extends StatefulWidget {
 }
 
 class _TutorScreenState extends State<TutorScreen> {
-  var rating = 3.0;
+  var rating = 4.0;
+  String _appointment = 'BOOK FOR APPOINTMENT';
 
   @override
   Widget build(BuildContext context) {
@@ -48,19 +49,26 @@ class _TutorScreenState extends State<TutorScreen> {
                       onPrimary: Colors.white,
                     ),
                     child: Text(
-                      'BOOK FOR APPOINTMENT',
+                      _appointment,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TutorScreen(),
-                        ),
-                      );
+                      setState(() {
+                        if (_appointment == 'BOOK FOR APPOINTMENT') {
+                          _appointment = 'WAITING FOR APPROVAL';
+                        } else {
+                          _appointment = 'BOOK FOR APPOINTMENT';
+                        }
+                      });
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const TutorScreen(),
+                      //   ),
+                      // );
                     },
                   ),
                   const SizedBox(
