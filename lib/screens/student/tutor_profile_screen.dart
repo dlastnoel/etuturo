@@ -1,15 +1,14 @@
-import 'package:etuturo_app/screens/student/list_of_tutors.dart';
-import 'package:etuturo_app/screens/student/student_profile_screen.dart';
+import 'package:etuturo_app/screens/tutor/tutor_info_screen.dart';
 import 'package:flutter/material.dart';
 
-class StudentDashboardScreen extends StatefulWidget {
-  const StudentDashboardScreen({Key? key}) : super(key: key);
+class TutorProfileScreen extends StatefulWidget {
+  const TutorProfileScreen({Key? key}) : super(key: key);
 
   @override
-  State<StudentDashboardScreen> createState() => _StudentDashboardScreenState();
+  State<TutorProfileScreen> createState() => _TutorProfileScreenState();
 }
 
-class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
+class _TutorProfileScreenState extends State<TutorProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +27,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                   height: 10,
                 ),
                 const Text(
-                  'Student Dashboard',
+                  'Tutor Dashboard',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -56,28 +55,6 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                     children: [
                       ElevatedButton(
                         child: const Text(
-                          'List of Tutors',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            onPrimary: Colors.black,
-                            fixedSize: Size(
-                                MediaQuery.of(context).size.width - 70, 0)),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ListOfTutorsScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                      ElevatedButton(
-                        child: const Text(
                           'Profile',
                           style: TextStyle(
                             fontSize: 18,
@@ -91,23 +68,84 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                 MediaQuery.of(context).size.width - 50, 0)),
                         onPressed: () {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const StudentProfileScreen(),
-                            ),
-                          );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const TutorProfileScreen()));
                         },
+                      ),
+                      ElevatedButton(
+                        child: const Text(
+                          'Information',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            onPrimary: Colors.black,
+                            fixedSize: Size(
+                                MediaQuery.of(context).size.width - 50, 0)),
+                        onPressed: () {
+                          Navigator.push(
+                              (context),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const TutorInfoScreen()));
+                        },
+                      ),
+                      ElevatedButton(
+                        child: const Text(
+                          'Appointments',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            onPrimary: Colors.black,
+                            fixedSize: Size(
+                                MediaQuery.of(context).size.width - 50, 0)),
+                        onPressed: () {},
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(
-                  height: 15,
+                  height: 10,
+                ),
+                ElevatedButton(
+                  child: const Text(
+                    'Delete Account',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.tealAccent.shade700,
+                      onPrimary: Colors.white,
+                      fixedSize: const Size(150, 0)),
+                  onPressed: () {},
                 ),
               ],
             ),
           ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 5,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              color: Colors.white,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          )
         ],
       ),
     );

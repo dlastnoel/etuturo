@@ -38,10 +38,16 @@ dependencies:
   google_sign_in: ^5.3.1
   fluttertoast: ^8.0.9
   cloud_firestore: ^3.1.15
+  flutter_launcher_icons: ^0.9.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  image_path: "assets/images/app_icon.png"
+  android: true
+  ios: true
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
