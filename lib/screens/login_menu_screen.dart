@@ -11,7 +11,7 @@ class LoginMenuScreen extends StatefulWidget {
 }
 
 class _LoginMenuScreenState extends State<LoginMenuScreen> {
-  DatabaseModel databaseModel = DatabaseModel();
+  // DatabaseModel databaseModel = DatabaseModel();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 

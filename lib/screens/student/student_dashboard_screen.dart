@@ -1,18 +1,63 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:etuturo_app/preferences/appointment_preferences.dart';
 import 'package:etuturo_app/screens/login_screen.dart';
 import 'package:etuturo_app/screens/student/list_of_tutors.dart';
+import 'package:etuturo_app/screens/student/rate_tutor_screen.dart';
 import 'package:etuturo_app/screens/student/student_profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StudentDashboardScreen extends StatefulWidget {
-  const StudentDashboardScreen({Key? key}) : super(key: key);
+  StudentDashboardScreen({
+    Key? key,
+    required this.studentId,
+  }) : super(key: key);
+  final String studentId;
 
   @override
   State<StudentDashboardScreen> createState() => _StudentDashboardScreenState();
 }
 
 class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
+  final _appointmentPreferences = AppointmentPreferences();
+  String studentId = '';
+  String studentName = '';
+  initStudent() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('students')
+        .where('id', isEqualTo: widget.studentId)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    setState(() {
+      studentId = documents.first.get('id');
+      studentName = documents.first.get('name');
+    });
+  }
+
+  bool _hasAppointment = false;
+  bool _booked = false;
+
+  initHasAppointment() async {
+    _hasAppointment = await _appointmentPreferences.getAppointment();
+    print('HAS APPOINTMENT' + _hasAppointment.toString());
+    setState(() {
+      if (_hasAppointment) {
+        _booked = true;
+      } else {
+        _booked = false;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // initHasAppointment();
+    initStudent();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,8 +91,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text(
-                  'Mark Dela Cruz',
+                Text(
+                  studentName,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -94,6 +139,28 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                       ),
                       ElevatedButton(
                         child: const Text(
+                          'Rate Tutor',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            onPrimary: Colors.black,
+                            fixedSize: Size(
+                                MediaQuery.of(context).size.width - 70, 0)),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RateTutorScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      ElevatedButton(
+                        child: const Text(
                           'Profile',
                           style: TextStyle(
                             fontSize: 18,
@@ -110,7 +177,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  const StudentProfileScreen(),
+                                  StudentProfileScreen(studentId: studentId),
                             ),
                           );
                         },

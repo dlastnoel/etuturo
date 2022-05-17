@@ -2,6 +2,7 @@ import 'package:etuturo_app/screens/tutor/tutor_dashboard_screen.dart';
 import 'package:etuturo_app/screens/tutor/tutor_profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginTutorScreen extends StatefulWidget {
   const LoginTutorScreen({Key? key}) : super(key: key);
@@ -11,6 +12,27 @@ class LoginTutorScreen extends StatefulWidget {
 }
 
 class _LoginTutorScreenState extends State<LoginTutorScreen> {
+  Future<bool> tutorExists(String email, String password) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('tutors')
+        .where('email', isEqualTo: email)
+        .where('password', isEqualTo: password)
+        .limit(1)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    print(documents.length);
+    return documents.length == 1;
+  }
+
+  Future<String> initTutor(String email) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('tutors')
+        .where('email', isEqualTo: email)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    return documents.first.get('id');
+  }
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -79,13 +101,17 @@ class _LoginTutorScreenState extends State<LoginTutorScreen> {
                       onPrimary: Colors.white, // f
                       fixedSize: const Size(150, 0),
                     ),
-                    onPressed: () {
-                      if (_emailController.text == 'johndoe@gmail.com' &&
-                          _passwordController.text == 'vendetta0482') {
+                    onPressed: () async {
+                      bool exists = await tutorExists(
+                          _emailController.text, _passwordController.text);
+                      String tutorId = await initTutor(_emailController.text);
+                      if (exists) {
+                        // LOGIN HERE
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const TutorDashboardScreen(),
+                            builder: (context) =>
+                                TutorDashboardScreen(tutorId: tutorId),
                           ),
                         );
                       } else {
@@ -97,6 +123,23 @@ class _LoginTutorScreenState extends State<LoginTutorScreen> {
                           ),
                         );
                       }
+                      // if (_emailController.text == 'johndoe@gmail.com' &&
+                      //     _passwordController.text == 'vendetta0482') {
+                      //   // LOGIN HERE
+                      //   // Navigator.push(
+                      //   //   context,
+                      //   //   MaterialPageRoute(
+                      //   //     builder: (context) => const TutorDashboardScreen(),
+                      //   //   ),
+                      //   // );
+                      // } else {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     const SnackBar(
+                      //       content: Text(
+                      //         'Email/Password is incorrect.',
+                      //       ),
+                      //     ),
+                      //   );
                     },
                   ),
                 ],

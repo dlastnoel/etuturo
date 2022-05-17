@@ -4,16 +4,18 @@ import 'package:etuturo_app/screens/student/tutor_screen.dart';
 import 'package:etuturo_app/screens/tutor/tutor_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-class AppointmentListScreen extends StatefulWidget {
-  const AppointmentListScreen({Key? key}) : super(key: key);
+class RateTutorScreen extends StatefulWidget {
+  const RateTutorScreen({Key? key}) : super(key: key);
 
   @override
-  State<AppointmentListScreen> createState() => _AppointmentListScreenState();
+  State<RateTutorScreen> createState() => _RateTutorScreenState();
 }
 
-class _AppointmentListScreenState extends State<AppointmentListScreen> {
+class _RateTutorScreenState extends State<RateTutorScreen> {
   final _appointmentPreferences = AppointmentPreferences();
+  final _feedbackController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +34,7 @@ class _AppointmentListScreenState extends State<AppointmentListScreen> {
                   height: 15,
                 ),
                 const Text(
-                  'List of Appointments',
+                  'Rate Form',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -54,41 +56,44 @@ class _AppointmentListScreenState extends State<AppointmentListScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Name: Mark Dela Cruz',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                ),
+                              SmoothStarRating(
+                                rating: 0,
+                                isReadOnly: false,
+                                size: 30,
+                                filledIconData: Icons.star,
+                                halfFilledIconData: Icons.star_half,
+                                defaultIconData: Icons.star_border,
+                                starCount: 5,
+                                allowHalfRating: true,
+                                spacing: 2.0,
+                                onRated: (value) {
+                                  print("rating value -> $value");
+                                  // print("rating value dd -> ${value.truncate()}");
+                                },
                               ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              const Text(
-                                'Address: San Juan, La Union',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                ),
-                              ),
+                              TextField(
+                                  controller: _feedbackController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Feedback',
+                                    hintText: 'Feedback',
+                                  )),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.blue,
                                   onPrimary: Colors.white,
                                 ),
                                 child: Text(
-                                  'ACCEPT STUDENT',
+                                  'RATE',
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 onPressed: () {
-                                  _appointmentPreferences.setAppointment(true);
+                                  _appointmentPreferences.setAppointment(false);
                                   Fluttertoast.showToast(
-                                      msg: 'Student accepted',
+                                      msg: 'Rate successful',
                                       toastLength: Toast.LENGTH_LONG);
-                                  Navigator.pop(context);
                                 },
                               )
                             ],

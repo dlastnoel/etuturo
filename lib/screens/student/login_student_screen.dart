@@ -1,4 +1,5 @@
 import 'package:etuturo_app/models/database_model.dart';
+import 'package:etuturo_app/screens/student/student_dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,11 +12,30 @@ class LoginStudentScreen extends StatefulWidget {
 }
 
 class _LoginStudentScreenState extends State<LoginStudentScreen> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  DatabaseModel databaseModel = DatabaseModel();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  // DatabaseModel databaseModel = DatabaseModel();
 
-  
+  Future<bool> studentExists(String email, String password) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('students')
+        .where('email', isEqualTo: email)
+        .where('password', isEqualTo: password)
+        .limit(1)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    print(documents.length);
+    return documents.length == 1;
+  }
+
+  Future<String> initStudent(String email) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('students')
+        .where('email', isEqualTo: email)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    return documents.first.get('id');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +77,7 @@ class _LoginStudentScreenState extends State<LoginStudentScreen> {
                         margin: const EdgeInsets.symmetric(
                             vertical: 0, horizontal: 20),
                         child: TextFormField(
-                          controller: emailController,
+                          controller: _emailController,
                           cursorColor: Colors.black,
                           decoration: const InputDecoration(labelText: "Email"),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -68,7 +88,7 @@ class _LoginStudentScreenState extends State<LoginStudentScreen> {
                             vertical: 0, horizontal: 20),
                         child: TextFormField(
                           obscureText: true,
-                          controller: passwordController,
+                          controller: _passwordController,
                           cursorColor: Colors.black,
                           decoration:
                               const InputDecoration(labelText: "Password"),
@@ -89,9 +109,9 @@ class _LoginStudentScreenState extends State<LoginStudentScreen> {
                           onPrimary: Colors.white, // f
                           fixedSize: const Size(150, 0),
                         ),
-                        onPressed: () {
-                          databaseModel.signIn(
-                              emailController, passwordController, context);
+                        onPressed: () async {
+                          // databaseModel.signIn(
+                          //     emailController, passwordController, context);
                           // print(emailController.text);
                           // print(passwordController.text);
 
@@ -104,6 +124,29 @@ class _LoginStudentScreenState extends State<LoginStudentScreen> {
                           //         const StudentDashboardScreen(),
                           //   ),
                           // );
+                          bool exists = await studentExists(
+                              _emailController.text, _passwordController.text);
+                          String studentId =
+                              await initStudent(_emailController.text);
+                          if (exists) {
+                            // LOGIN HERE
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StudentDashboardScreen(
+                                  studentId: studentId,
+                                ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Email/Password is incorrect.',
+                                ),
+                              ),
+                            );
+                          }
                         },
                       ),
                     ],

@@ -1,7 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class StudentProfileScreen extends StatefulWidget {
-  const StudentProfileScreen({Key? key}) : super(key: key);
+  StudentProfileScreen({
+    Key? key,
+    required this.studentId,
+  }) : super(key: key);
+  final String studentId;
 
   @override
   State<StudentProfileScreen> createState() => _StudentProfileScreenState();
@@ -12,11 +18,25 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
 
+  initStudent() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('students')
+        .where('id', isEqualTo: widget.studentId)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    setState(() {
+      _nameController.text = documents.first.get('name');
+      _emailController.text = documents.first.get('email');
+      _addressController.text = documents.first.get('address');
+    });
+  }
+
   @override
   void initState() {
-    _nameController.text = 'Mark Dela Cruz';
-    _emailController.text = 'markdelacruz07@gmail.com';
-    _addressController.text = 'San Juan, La Union';
+    // _nameController.text = 'Mark Dela Cruz';
+    // _emailController.text = 'markdelacruz07@gmail.com';
+    // _addressController.text = 'San Juan, La Union';
+    initStudent();
     super.initState();
   }
 
@@ -99,7 +119,18 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                       onPrimary: Colors.white,
                       fixedSize:
                           Size(MediaQuery.of(context).size.width - 50, 0)),
-                  onPressed: () {},
+                  onPressed: () {
+                    final _tutorInfoCollection =
+                        FirebaseFirestore.instance.collection('students');
+                    _tutorInfoCollection.doc(widget.studentId).update({
+                      'name': _nameController.text,
+                      'email': _emailController.text,
+                      'address': _addressController.text,
+                    }).then((value) {
+                      Fluttertoast.showToast(msg: 'Info successfully updated');
+                      Navigator.pop(context);
+                    }).catchError((error) => print('Failed: $error'));
+                  },
                 )
               ],
             ),

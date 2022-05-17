@@ -1,7 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etuturo_app/models/database_model.dart';
+import 'package:etuturo_app/models/student.dart';
+import 'package:etuturo_app/screens/login_screen.dart';
 import 'package:etuturo_app/screens/student/login_student_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:uuid/uuid.dart';
 
 class SignupStudentScreen extends StatefulWidget {
   const SignupStudentScreen({Key? key}) : super(key: key);
@@ -11,12 +17,19 @@ class SignupStudentScreen extends StatefulWidget {
 }
 
 class _SignupStudentScreenState extends State<SignupStudentScreen> {
-  DatabaseModel databaseModel = DatabaseModel();
+  final _uuid = Uuid();
+  final _nameController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final usernameController = TextEditingController();
-  final addressController = TextEditingController();
+  addStudent(Student student) async {
+    final studentDoc =
+        await FirebaseFirestore.instance.collection('students').doc(student.id);
+    await studentDoc.set(student.toJson());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +69,8 @@ class _SignupStudentScreenState extends State<SignupStudentScreen> {
                     Container(
                       margin: const EdgeInsets.symmetric(
                           vertical: 0, horizontal: 20),
-                      child: const TextField(
+                      child: TextField(
+                        controller: _nameController,
                         decoration: InputDecoration(
                           labelText: 'Name',
                           hintText: 'Name',
@@ -68,11 +82,11 @@ class _SignupStudentScreenState extends State<SignupStudentScreen> {
                           vertical: 0, horizontal: 20),
                       child: TextField(
                         keyboardType: TextInputType.emailAddress,
-                        controller: usernameController,
-                        cursorColor: Colors.black,
-                        textInputAction: TextInputAction.next,
-                        decoration:
-                            const InputDecoration(labelText: "Username"),
+                        controller: _usernameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Username',
+                          hintText: 'Username',
+                        ),
                       ),
                     ),
                     Container(
@@ -80,21 +94,21 @@ class _SignupStudentScreenState extends State<SignupStudentScreen> {
                           vertical: 0, horizontal: 20),
                       child: TextField(
                         keyboardType: TextInputType.emailAddress,
-                        controller: emailController,
-                        cursorColor: Colors.black,
-                        textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(labelText: "Email"),
+                        controller: _emailController,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          hintText: 'Email',
+                        ),
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.symmetric(
                           vertical: 0, horizontal: 20),
                       child: TextField(
-                        controller: addressController,
-                        cursorColor: Colors.black,
-                        textInputAction: TextInputAction.next,
+                        controller: _addressController,
                         decoration: const InputDecoration(
-                          labelText: "Address",
+                          labelText: 'Address',
+                          hintText: 'Address',
                         ),
                       ),
                     ),
@@ -103,9 +117,8 @@ class _SignupStudentScreenState extends State<SignupStudentScreen> {
                           vertical: 0, horizontal: 20),
                       child: TextField(
                         // keyboardType: TextInputType.visiblePassword
-                        controller: passwordController,
-                        cursorColor: Colors.black,
-                        textInputAction: TextInputAction.next,
+                        controller: _passwordController,
+                        obscureText: true,
                         decoration: const InputDecoration(
                           labelText: 'Password',
                           hintText: 'Password',
@@ -116,10 +129,8 @@ class _SignupStudentScreenState extends State<SignupStudentScreen> {
                       margin: const EdgeInsets.symmetric(
                           vertical: 0, horizontal: 20),
                       child: TextField(
-                        // keyboardType: TextInputType.visiblePassword
-                        controller: passwordController,
-                        cursorColor: Colors.black,
-                        textInputAction: TextInputAction.next,
+                        controller: _confirmPasswordController,
+                        obscureText: true,
                         decoration: const InputDecoration(
                           labelText: 'Confirm Password',
                           hintText: 'Confirm Password',
@@ -154,28 +165,56 @@ class _SignupStudentScreenState extends State<SignupStudentScreen> {
                         //     emailController, passwordController, context);
                         // print(emailController.text);
                         // print(passwordController.text);
-                        try {
-                          await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                                  email: emailController.text.trim(),
-                                  password: passwordController.text.trimLeft());
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const LoginStudentScreen()));
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == "email-already-in-use") {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Email already in use'),
-                              ),
-                            );
-                          }
+                        // try {
+                        //   await FirebaseAuth.instance
+                        //       .createUserWithEmailAndPassword(
+                        //           email: emailController.text.trim(),
+                        //           password: passwordController.text.trimLeft());
+                        //   Navigator.of(context).pushReplacement(
+                        //       MaterialPageRoute(
+                        //           builder: (context) =>
+                        //               const LoginStudentScreen()));
+                        // } on FirebaseAuthException catch (e) {
+                        //   if (e.code == "email-already-in-use") {
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       const SnackBar(
+                        //         content: Text('Email already in use'),
+                        //       ),
+                        //     );
+                        //   }
 
-                          if (e.code == 'weak-password') {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Enter a strong password'),
+                        //   if (e.code == 'weak-password') {
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       const SnackBar(
+                        //         content: Text('Enter a strong password'),
+                        //       ),
+                        //     );
+                        //   }
+                        // }
+                        if (_nameController.text != '' &&
+                            _usernameController.text != '' &&
+                            _emailController.text != '' &&
+                            _addressController.text != '' &&
+                            _passwordController.text != '' &&
+                            _confirmPasswordController.text != '') {
+                          if (_passwordController.text ==
+                              _confirmPasswordController.text) {
+                            final studentId = _uuid.v4();
+                            Student student = Student(
+                                id: studentId,
+                                name: _nameController.text,
+                                username: _usernameController.text,
+                                email: _emailController.text,
+                                address: _addressController.text,
+                                password: _passwordController.text);
+                            addStudent(student);
+                            Fluttertoast.showToast(
+                                msg: 'Student successfully registered',
+                                toastLength: Toast.LENGTH_LONG);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
                               ),
                             );
                           }

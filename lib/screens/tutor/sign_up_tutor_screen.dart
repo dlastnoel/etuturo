@@ -1,5 +1,13 @@
+import 'package:etuturo_app/models/tutor_info.dart';
+import 'package:etuturo_app/preferences/login_preferences.dart';
+import 'package:etuturo_app/screens/login_screen.dart';
+import 'package:etuturo_app/screens/tutor/tutor_info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:uuid/uuid.dart';
+import 'dart:async';
+import '../../models/tutor.dart';
 
 class SignupTutorScreen extends StatefulWidget {
   const SignupTutorScreen({Key? key}) : super(key: key);
@@ -9,6 +17,7 @@ class SignupTutorScreen extends StatefulWidget {
 }
 
 class _SignupTutorScreenState extends State<SignupTutorScreen> {
+  final _uuid = Uuid();
   final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -17,6 +26,47 @@ class _SignupTutorScreenState extends State<SignupTutorScreen> {
   final _shortBioController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  Future<bool> tutorExists(String username) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('tutors')
+        .where('username', isEqualTo: username)
+        .limit(1)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    return documents.length == 1;
+  }
+
+  addTutor(Tutor tutor, TutorInfo tutorInfo) async {
+    final tutorDoc =
+        await FirebaseFirestore.instance.collection('tutors').doc(tutor.id);
+    await tutorDoc.set(tutor.toJson());
+    await addTutorInfo(tutorInfo, tutor.id);
+  }
+
+  addTutorInfo(TutorInfo tutorInfo, tutorInfoId) async {
+    final tutorInfoDoc = await FirebaseFirestore.instance
+        .collection('tutor_info')
+        .doc(tutorInfo.id);
+    await tutorInfoDoc.set(tutorInfo.toJson());
+  }
+
+  initData() {
+    _nameController.text = 'John Doe';
+    _usernameController.text = 'johndoe';
+    _emailController.text = 'johndoe@gmail.com';
+    _addressController.text = 'City of San Fernando, La Union';
+    _socialMediaUrlController.text = 'www.facebook.com/johndoe';
+    _shortBioController.text = 'I teach English and Science';
+    _passwordController.text = '12345';
+    _confirmPasswordController.text = '12345';
+  }
+
+  @override
+  void initState() {
+    // initData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,16 +205,52 @@ class _SignupTutorScreenState extends State<SignupTutorScreen> {
                       onPrimary: Colors.white, // f
                       fixedSize: const Size(200, 0),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_nameController.text != '' &&
                           _usernameController.text != '' &&
                           _emailController.text != '' &&
                           _addressController.text != '' &&
+                          _socialMediaUrlController.text != '' &&
                           _shortBioController.text != '' &&
                           _passwordController.text != '' &&
                           _confirmPasswordController.text != '') {
                         if (_passwordController.text ==
-                            _confirmPasswordController.text) {}
+                            _confirmPasswordController.text) {
+                          bool exists =
+                              await tutorExists(_usernameController.text);
+                          if (!exists) {
+                            final tutorId = _uuid.v4();
+                            final tutorInfoId = _uuid.v4();
+                            Tutor tutor = Tutor(
+                                id: tutorId,
+                                name: _nameController.text,
+                                username: _usernameController.text,
+                                email: _emailController.text,
+                                address: _addressController.text,
+                                socialMediaUrl: _socialMediaUrlController.text,
+                                shortBio: _shortBioController.text,
+                                password: _passwordController.text);
+                            TutorInfo tutorInfo = TutorInfo(
+                              id: tutorInfoId,
+                              tutor_id: tutor.id,
+                              availability: false,
+                              ratePerHour: '0',
+                            );
+                            addTutor(tutor, tutorInfo);
+                            Fluttertoast.showToast(
+                                msg: 'Tutor successfully registered',
+                                toastLength: Toast.LENGTH_LONG);
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TutorInfoScreen(
+                                          tutorId: tutorId,
+                                          tutorInfoId: tutorInfoId,
+                                          loginMethod: 'sign-up',
+                                        )),
+                                (route) => false);
+                          }
+                        }
                       }
                     },
                   ),

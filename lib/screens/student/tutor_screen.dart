@@ -1,16 +1,75 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:etuturo_app/preferences/booking_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TutorScreen extends StatefulWidget {
-  const TutorScreen({Key? key}) : super(key: key);
+  const TutorScreen({
+    Key? key,
+    required this.tutorId,
+  }) : super(key: key);
+  final String tutorId;
 
   @override
   State<TutorScreen> createState() => _TutorScreenState();
 }
 
 class _TutorScreenState extends State<TutorScreen> {
+  final _bookingPreferences = BookingPreferences();
   var rating = 4.0;
   String _appointment = 'BOOK FOR APPOINTMENT';
+  String _booking = '';
+  String name = '';
+  String email = '';
+  String address = '';
+  String socialMediaUrl = '';
+  String shortBio = '';
+
+  bool availability = false;
+  String ratePerHour = '';
+
+  initBooking() async {
+    _booking = await _bookingPreferences.getBooking();
+    setState(() {
+      _appointment = _booking;
+    });
+  }
+
+  initTutor() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('tutors')
+        .where('id', isEqualTo: widget.tutorId)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    setState(() {
+      name = documents.first.get('name');
+      email = documents.first.get('email');
+      address = documents.first.get('address');
+      socialMediaUrl = documents.first.get('social_media_url');
+      shortBio = documents.first.get('short_bio');
+    });
+  }
+
+  initTutorInfo() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('tutor_info')
+        .where('tutor_id', isEqualTo: widget.tutorId)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    setState(() {
+      availability = documents.first.get('availability');
+      ratePerHour = documents.first.get('rate_per_hour');
+    });
+  }
+
+  @override
+  void initState() {
+    // initBooking();
+    initTutor();
+    initTutorInfo();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +89,8 @@ class _TutorScreenState extends State<TutorScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
-                    'Hi! I am John Doe. Here is my profile.',
+                  Text(
+                    'Hi! I am ${name}. Here is my profile.',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -59,8 +118,12 @@ class _TutorScreenState extends State<TutorScreen> {
                       setState(() {
                         if (_appointment == 'BOOK FOR APPOINTMENT') {
                           _appointment = 'WAITING FOR APPROVAL';
+                          _bookingPreferences
+                              .setBooking('WAITING FOR APPROVAL');
                         } else {
                           _appointment = 'BOOK FOR APPOINTMENT';
+                          _bookingPreferences
+                              .setBooking('BOOK FOR APPOINTMENT');
                         }
                       });
                       // Navigator.push(
@@ -95,22 +158,22 @@ class _TutorScreenState extends State<TutorScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Email: johndoe@gmail.com',
+                        Text(
+                          'Email: ${email}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
                           ),
                         ),
-                        const Text(
-                          'Address: City of San Fernando, La Union',
+                        Text(
+                          'Address: ${address}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
                           ),
                         ),
-                        const Text(
-                          'Social Media Url: www.facebook.com/johndoe',
+                        Text(
+                          'Social Media Url: ${socialMediaUrl}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -118,6 +181,13 @@ class _TutorScreenState extends State<TutorScreen> {
                         ),
                         const Text(
                           'Short Bio: I teach English and Science',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          'Social Media Url: ${socialMediaUrl}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,

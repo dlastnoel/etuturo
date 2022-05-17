@@ -1,4 +1,5 @@
 import 'package:etuturo_app/screens/sign_up_menu_screen.dart';
+import 'package:etuturo_app/screens/student/login_student_screen.dart';
 import 'package:flutter/material.dart';
 
 // screens

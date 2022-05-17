@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class TutorProfileScreen extends StatefulWidget {
-  const TutorProfileScreen({Key? key}) : super(key: key);
+  TutorProfileScreen({
+    Key? key,
+    required this.tutorId,
+  }) : super(key: key);
+  final String tutorId;
 
   @override
   State<TutorProfileScreen> createState() => _TutorProfileScreenState();
@@ -14,14 +20,24 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
   final _socialMediaUrlController = TextEditingController();
   final _shortBioController = TextEditingController();
 
+  initTutor() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('tutors')
+        .where('id', isEqualTo: widget.tutorId)
+        .get();
+    final List<DocumentSnapshot> documents = result.docs;
+    setState(() {
+      _nameController.text = documents.first.get('name');
+      _emailController.text = documents.first.get('email');
+      _addressController.text = documents.first.get('address');
+      _socialMediaUrlController.text = documents.first.get('social_media_url');
+      _shortBioController.text = documents.first.get('short_bio');
+    });
+  }
+
   @override
   void initState() {
-    _nameController.text = 'John Doe';
-    _emailController.text = 'johndoe@gmail.com';
-    _addressController.text = 'City of San Fernando, La Union';
-    _socialMediaUrlController.text = 'www.facebook.com';
-    _shortBioController.text = ' I teach English and Science';
-
+    initTutor();
     super.initState();
   }
 
@@ -126,7 +142,20 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
                       onPrimary: Colors.white,
                       fixedSize:
                           Size(MediaQuery.of(context).size.width - 50, 0)),
-                  onPressed: () {},
+                  onPressed: () {
+                    final _tutorInfoCollection =
+                        FirebaseFirestore.instance.collection('tutors');
+                    _tutorInfoCollection.doc(widget.tutorId).update({
+                      'name': _nameController.text,
+                      'email': _emailController.text,
+                      'address': _addressController.text,
+                      'social_media_url': _socialMediaUrlController.text,
+                      'short_bio': _shortBioController.text
+                    }).then((value) {
+                      Fluttertoast.showToast(msg: 'Info successfully updated');
+                      Navigator.pop(context);
+                    }).catchError((error) => print('Failed: $error'));
+                  },
                 )
               ],
             ),
