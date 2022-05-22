@@ -17,6 +17,7 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
+  final _contactNumberController = TextEditingController();
   final _socialMediaUrlController = TextEditingController();
   final _shortBioController = TextEditingController();
 
@@ -30,6 +31,7 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
       _nameController.text = documents.first.get('name');
       _emailController.text = documents.first.get('email');
       _addressController.text = documents.first.get('address');
+      _contactNumberController.text = documents.first.get('contact');
       _socialMediaUrlController.text = documents.first.get('social_media_url');
       _shortBioController.text = documents.first.get('short_bio');
     });
@@ -108,6 +110,17 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
                   margin:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                   child: TextField(
+                    controller: _contactNumberController,
+                    decoration: InputDecoration(
+                      labelText: 'Contact Number',
+                      hintText: 'Contact Number',
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                  child: TextField(
                     controller: _socialMediaUrlController,
                     decoration: InputDecoration(
                       labelText: 'Social Media Url',
@@ -149,6 +162,7 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
                       'name': _nameController.text,
                       'email': _emailController.text,
                       'address': _addressController.text,
+                      'contact': _contactNumberController.text,
                       'social_media_url': _socialMediaUrlController.text,
                       'short_bio': _shortBioController.text
                     }).then((value) {

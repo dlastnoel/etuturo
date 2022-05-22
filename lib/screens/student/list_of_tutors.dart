@@ -5,7 +5,13 @@ import 'package:etuturo_app/screens/tutor/tutor_profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class ListOfTutorsScreen extends StatefulWidget {
-  const ListOfTutorsScreen({Key? key}) : super(key: key);
+  ListOfTutorsScreen({
+    Key? key,
+    required this.studentId,
+    required this.studentName,
+  }) : super(key: key);
+  final String studentId;
+  final String studentName;
 
   @override
   State<ListOfTutorsScreen> createState() => _ListOfTutorsScreenState();
@@ -13,18 +19,34 @@ class ListOfTutorsScreen extends StatefulWidget {
 
 class _ListOfTutorsScreenState extends State<ListOfTutorsScreen> {
   List<DocumentSnapshot> documents = [];
-  initTutors() async {
-    final QuerySnapshot result =
-        await FirebaseFirestore.instance.collection('tutors').get();
+  List<DocumentSnapshot> tutorInfoDocs = [];
+
+  initTutor(String tutorId) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('tutors')
+        .where('id', isEqualTo: tutorId)
+        .get();
     setState(() {
       documents = result.docs;
     });
   }
 
+  initTutorsInfo() async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('tutor_info')
+        .where('availability', isEqualTo: true)
+        .get();
+    setState(() {
+      print(tutorInfoDocs.length);
+      tutorInfoDocs = result.docs;
+    });
+  }
+
   @override
   void initState() {
-    initTutors();
-    print(documents.length);
+    // initTutors();
+    initTutorsInfo();
+    // print(documents.length);
     super.initState();
   }
 
@@ -55,70 +77,77 @@ class _ListOfTutorsScreenState extends State<ListOfTutorsScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                Container(
-                  height: 500,
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width - 15,
-                        color: Colors.tealAccent.shade700,
-                        child: Container(
-                          margin: const EdgeInsets.all(10),
-                          child: Card(
-                              color: Colors.white,
-                              child: Container(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      documents[index]['name'],
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      documents[index]['address'],
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.blue,
-                                        onPrimary: Colors.white,
-                                      ),
-                                      child: Text(
-                                        'VIEW PROFILE',
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height - 200,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width - 15,
+                          color: Colors.tealAccent.shade700,
+                          child: Container(
+                            margin: const EdgeInsets.all(10),
+                            child: Card(
+                                color: Colors.white,
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        tutorInfoDocs[index]['name'],
                                         style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                          color: Colors.black,
                                         ),
                                       ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => TutorScreen(
-                                                tutorId: documents[index]
-                                                    ['id']),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        tutorInfoDocs[index]['address'],
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Colors.blue,
+                                          onPrimary: Colors.white,
+                                        ),
+                                        child: Text(
+                                          'VIEW PROFILE',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        );
-                                      },
-                                    )
-                                  ],
-                                ),
-                              )),
-                        ),
-                      );
-                    },
-                    itemCount: documents.length,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => TutorScreen(
+                                                  studentName:
+                                                      widget.studentName,
+                                                  studentId: widget.studentId,
+                                                  tutorId: tutorInfoDocs[index]
+                                                      ['tutor_id']),
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                )),
+                          ),
+                        );
+                      },
+                      itemCount: tutorInfoDocs.length,
+                    ),
                   ),
                 )
               ],

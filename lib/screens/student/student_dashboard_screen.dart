@@ -22,8 +22,8 @@ class StudentDashboardScreen extends StatefulWidget {
 
 class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   final _appointmentPreferences = AppointmentPreferences();
-  String studentId = '';
-  String studentName = '';
+  String _studentId = '';
+  String _studentName = '';
   initStudent() async {
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('students')
@@ -31,8 +31,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
         .get();
     final List<DocumentSnapshot> documents = result.docs;
     setState(() {
-      studentId = documents.first.get('id');
-      studentName = documents.first.get('name');
+      _studentId = documents.first.get('id');
+      _studentName = documents.first.get('name');
     });
   }
 
@@ -92,7 +92,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                   height: 10,
                 ),
                 Text(
-                  studentName,
+                  _studentName,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -132,29 +132,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ListOfTutorsScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                      ElevatedButton(
-                        child: const Text(
-                          'Rate Tutor',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            onPrimary: Colors.black,
-                            fixedSize: Size(
-                                MediaQuery.of(context).size.width - 70, 0)),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RateTutorScreen(),
+                              builder: (context) => ListOfTutorsScreen(
+                                  studentId: _studentId,
+                                  studentName: _studentName),
                             ),
                           );
                         },
@@ -177,7 +157,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  StudentProfileScreen(studentId: studentId),
+                                  StudentProfileScreen(studentId: _studentId),
                             ),
                           );
                         },
@@ -203,13 +183,6 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                                 builder: (context) => const LoginScreen(),
                               ),
                               (route) => false);
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) =>
-                          //         const StudentProfileScreen(),
-                          //   ),
-                          // );
                         },
                       ),
                     ],

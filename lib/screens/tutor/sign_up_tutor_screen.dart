@@ -1,3 +1,4 @@
+import '../dialogs/sign_up_dialog.dart';
 import 'package:etuturo_app/models/tutor_info.dart';
 import 'package:etuturo_app/preferences/login_preferences.dart';
 import 'package:etuturo_app/screens/login_screen.dart';
@@ -22,6 +23,7 @@ class _SignupTutorScreenState extends State<SignupTutorScreen> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
+  final _contactNumberController = TextEditingController();
   final _socialMediaUrlController = TextEditingController();
   final _shortBioController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -58,6 +60,7 @@ class _SignupTutorScreenState extends State<SignupTutorScreen> {
     _addressController.text = 'City of San Fernando, La Union';
     _socialMediaUrlController.text = 'www.facebook.com/johndoe';
     _shortBioController.text = 'I teach English and Science';
+    _contactNumberController.text = '09123456789';
     _passwordController.text = '12345';
     _confirmPasswordController.text = '12345';
   }
@@ -150,6 +153,18 @@ class _SignupTutorScreenState extends State<SignupTutorScreen> {
                     margin:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                     child: TextField(
+                      controller: _contactNumberController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Contact Number',
+                        hintText: 'Contact Number',
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                    child: TextField(
                       controller: _socialMediaUrlController,
                       decoration: const InputDecoration(
                         labelText: 'Social Media Url',
@@ -210,6 +225,7 @@ class _SignupTutorScreenState extends State<SignupTutorScreen> {
                           _usernameController.text != '' &&
                           _emailController.text != '' &&
                           _addressController.text != '' &&
+                          _contactNumberController.text != '' &&
                           _socialMediaUrlController.text != '' &&
                           _shortBioController.text != '' &&
                           _passwordController.text != '' &&
@@ -227,30 +243,37 @@ class _SignupTutorScreenState extends State<SignupTutorScreen> {
                                 username: _usernameController.text,
                                 email: _emailController.text,
                                 address: _addressController.text,
+                                contact: _contactNumberController.text,
                                 socialMediaUrl: _socialMediaUrlController.text,
                                 shortBio: _shortBioController.text,
                                 password: _passwordController.text);
                             TutorInfo tutorInfo = TutorInfo(
                               id: tutorInfoId,
+                              name: _nameController.text,
+                              address: _addressController.text,
                               tutor_id: tutor.id,
                               availability: false,
                               ratePerHour: '0',
                             );
-                            addTutor(tutor, tutorInfo);
-                            Fluttertoast.showToast(
-                                msg: 'Tutor successfully registered',
-                                toastLength: Toast.LENGTH_LONG);
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TutorInfoScreen(
-                                          tutorId: tutorId,
-                                          tutorInfoId: tutorInfoId,
-                                          loginMethod: 'sign-up',
-                                        )),
-                                (route) => false);
+                            tutorSignupDialog(context, tutor, tutorInfo);
                           }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Email/Password is incorrect.',
+                              ),
+                            ),
+                          );
                         }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Please complete your credentials.',
+                            ),
+                          ),
+                        );
                       }
                     },
                   ),

@@ -5,6 +5,7 @@ class Tutor {
     required this.username,
     required this.email,
     required this.address,
+    required this.contact,
     required this.socialMediaUrl,
     required this.shortBio,
     required this.password,
@@ -14,6 +15,7 @@ class Tutor {
   String username;
   String email;
   String address;
+  String contact;
   String socialMediaUrl;
   String shortBio;
   String password;
@@ -24,6 +26,7 @@ class Tutor {
         'username': username,
         'email': email,
         'address': address,
+        'contact': contact,
         'social_media_url': socialMediaUrl,
         'short_bio': shortBio,
         'password': password,
@@ -35,6 +38,7 @@ class Tutor {
         email: json['email'] as String,
         username: json['username'] as String,
         address: json['address'] as String,
+        contact: json['contact'] as String,
         socialMediaUrl: json['social_media_url'] as String,
         shortBio: json['short_bio'] as String,
         password: json['password'] as String,

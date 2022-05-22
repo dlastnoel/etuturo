@@ -17,6 +17,9 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
+  final _contactNumberController = TextEditingController();
+  final _gradeLevelController = TextEditingController();
+  final _howMayWeHelpYouController = TextEditingController();
 
   initStudent() async {
     final QuerySnapshot result = await FirebaseFirestore.instance
@@ -28,6 +31,10 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       _nameController.text = documents.first.get('name');
       _emailController.text = documents.first.get('email');
       _addressController.text = documents.first.get('address');
+      _contactNumberController.text = documents.first.get('contact');
+      _gradeLevelController.text = documents.first.get('grade_level');
+      _howMayWeHelpYouController.text =
+          documents.first.get('how_may_we_help_you');
     });
   }
 
@@ -103,6 +110,39 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                     ),
                   ),
                 ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                  child: TextField(
+                    controller: _contactNumberController,
+                    decoration: InputDecoration(
+                      labelText: 'Contact',
+                      hintText: 'Contact',
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                  child: TextField(
+                    controller: _howMayWeHelpYouController,
+                    decoration: InputDecoration(
+                      labelText: 'How may we help you?',
+                      hintText: 'How may we help you?',
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                  child: TextField(
+                    controller: _gradeLevelController,
+                    decoration: InputDecoration(
+                      labelText: 'Grade Level',
+                      hintText: 'Grade Level',
+                    ),
+                  ),
+                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -126,6 +166,8 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                       'name': _nameController.text,
                       'email': _emailController.text,
                       'address': _addressController.text,
+                      'contact': _contactNumberController.text,
+                      'how_may_we_help_you': _howMayWeHelpYouController.text,
                     }).then((value) {
                       Fluttertoast.showToast(msg: 'Info successfully updated');
                       Navigator.pop(context);

@@ -36,6 +36,17 @@ class _LoginTutorScreenState extends State<LoginTutorScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  initControllers() {
+    _emailController.text = 'johndoe@gmail.com';
+    _passwordController.text = '12345';
+  }
+
+  @override
+  void initState() {
+    // initControllers();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -55,7 +66,7 @@ class _LoginTutorScreenState extends State<LoginTutorScreen> {
                     height: 15,
                   ),
                   const Text(
-                    'Hello!',
+                    'Hello Tutor!',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -102,44 +113,38 @@ class _LoginTutorScreenState extends State<LoginTutorScreen> {
                       fixedSize: const Size(150, 0),
                     ),
                     onPressed: () async {
-                      bool exists = await tutorExists(
-                          _emailController.text, _passwordController.text);
-                      String tutorId = await initTutor(_emailController.text);
-                      if (exists) {
-                        // LOGIN HERE
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                TutorDashboardScreen(tutorId: tutorId),
-                          ),
-                        );
+                      if (_emailController.text != '' &&
+                          _passwordController.text != '') {
+                        bool exists = await tutorExists(
+                            _emailController.text, _passwordController.text);
+                        String tutorId = await initTutor(_emailController.text);
+                        if (exists) {
+                          // LOGIN HERE
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  TutorDashboardScreen(tutorId: tutorId),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Email/Password is incorrect.',
+                              ),
+                            ),
+                          );
+                        }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                              'Email/Password is incorrect.',
+                              'Please complete your credentials.',
                             ),
                           ),
                         );
                       }
-                      // if (_emailController.text == 'johndoe@gmail.com' &&
-                      //     _passwordController.text == 'vendetta0482') {
-                      //   // LOGIN HERE
-                      //   // Navigator.push(
-                      //   //   context,
-                      //   //   MaterialPageRoute(
-                      //   //     builder: (context) => const TutorDashboardScreen(),
-                      //   //   ),
-                      //   // );
-                      // } else {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     const SnackBar(
-                      //       content: Text(
-                      //         'Email/Password is incorrect.',
-                      //       ),
-                      //     ),
-                      //   );
                     },
                   ),
                 ],

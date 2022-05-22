@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etuturo_app/models/tutor.dart';
+import 'package:etuturo_app/screens/dialogs/delete_tutor_dialog.dart';
 import 'package:etuturo_app/screens/login_screen.dart';
-import 'package:etuturo_app/screens/tutor/appointment_list.dart';
+import 'package:etuturo_app/screens/tutor/list_of_appointments.dart';
 import 'package:etuturo_app/screens/tutor/tutor_info_screen.dart';
 import 'package:etuturo_app/screens/tutor/tutor_profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,6 +44,53 @@ class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
     setState(() {
       tutorInfoId = documents.first.get('id');
     });
+  }
+
+  deleteTutorData() async {
+    List<DocumentSnapshot> tutorInfos = [];
+    List<DocumentSnapshot> studentBookings = [];
+    List<DocumentSnapshot> ratings = [];
+
+    final tutorDoc = await FirebaseFirestore.instance
+        .collection('tutor')
+        .doc(widget.tutorId);
+    final tutorInfoDocs = await FirebaseFirestore.instance
+        .collection('tutor_info')
+        .where('tutor_id', isEqualTo: widget.tutorId)
+        .get();
+    tutorInfos = tutorInfoDocs.docs;
+
+    final studentBookingDocs = await FirebaseFirestore.instance
+        .collection('student_booking')
+        .where('tutor_id', isEqualTo: widget.tutorId)
+        .get();
+    studentBookings = studentBookingDocs.docs;
+
+    final ratingDocs = await FirebaseFirestore.instance
+        .collection('ratings')
+        .where('tutor_id', isEqualTo: widget.tutorId)
+        .get();
+    ratings = ratingDocs.docs;
+
+    tutorDoc.delete();
+    for (int i = 0; i < tutorInfos.length; i++) {
+      final tutorInfo = await FirebaseFirestore.instance
+          .collection('tutor')
+          .doc(tutorInfos[i]['id']);
+      tutorInfo.delete();
+    }
+    for (int i = 0; i < studentBookings.length; i++) {
+      final studentBooking = await FirebaseFirestore.instance
+          .collection('tutor_info')
+          .doc(studentBookings[i]['id']);
+      studentBooking.delete();
+    }
+    for (int i = 0; i < ratings.length; i++) {
+      final rating = await FirebaseFirestore.instance
+          .collection('ratings')
+          .doc(ratings[i]['id']);
+      rating.delete();
+    }
   }
 
   @override
@@ -175,8 +223,8 @@ class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const AppointmentListScreen(),
+                              builder: (context) => ListofAppointmentsScreen(
+                                  tutorId: widget.tutorId),
                             ),
                           );
                         },
@@ -220,7 +268,9 @@ class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
                     primary: Colors.tealAccent.shade700,
                     onPrimary: Colors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    deleteTutorDialog(context, tutorId);
+                  },
                 ),
               ],
             ),

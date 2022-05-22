@@ -4,7 +4,10 @@ class Student {
     required this.name,
     required this.username,
     required this.email,
+    required this.gradeLevel,
+    required this.howMayWeHelpYou,
     required this.address,
+    required this.contact,
     required this.password,
   });
 
@@ -12,7 +15,10 @@ class Student {
   String name;
   String username;
   String email;
+  String gradeLevel;
+  String howMayWeHelpYou;
   String address;
+  String contact;
   String password;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -21,6 +27,9 @@ class Student {
         'username': username,
         'email': email,
         'address': address,
+        'contact': contact,
+        'grade_level': gradeLevel,
+        'how_may_we_help_you': howMayWeHelpYou,
         'password': password,
       };
 
@@ -30,6 +39,9 @@ class Student {
         email: json['email'] as String,
         username: json['username'] as String,
         address: json['address'] as String,
+        contact: json['contact'] as String,
+        gradeLevel: json['grade_level'] as String,
+        howMayWeHelpYou: json['how_may_we_help_you'] as String,
         password: json['password'] as String,
       );
 }

@@ -27,6 +27,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Image(
                   image: AssetImage('assets/images/head.png'),
                 ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.10,
+                ),
                 const SizedBox(
                   height: 15,
                 ),
@@ -68,6 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
                   },
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 ElevatedButton(
                   child: const Text(
